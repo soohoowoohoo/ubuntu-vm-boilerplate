@@ -21,11 +21,18 @@ rm -f /var/lib/dbus/machine-id
 rm -f /etc/machine-id
 dbus-uuidgen --ensure=/etc/machine-id
 ln -s /etc/machine-id /var/lib/dbus/
+echo "New Machine ID is $(cat /etc/machine-id)"
 
 echo "Generating SSH server keys"
-ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa -y
-ssh-keygen -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa -y
-ssh-keygen -f /etc/ssh/ssh_host_ecdsa_key -N '' -t ecdsa -b 521 -y
+ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa
+ssh-keygen -f /etc/ssh/ssh_host_rsa_key -y
+ssh-keygen -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa
+ssh-keygen -f /etc/ssh/ssh_host_dsa_key -y
+ssh-keygen -f /etc/ssh/ssh_host_ecdsa_key -N '' -t ecdsa -b 521
+ssh-keygen -f /etc/ssh/ssh_host_ecdsa_key -y
+
+echo "Disabling cloud-init"
+touch /etc/cloud/cloud-init.disabled
 
 echo "Setting Hostname"
 sed -i "s/$HOSTNAME/$newHostname/g" /etc/hosts
